@@ -10,42 +10,61 @@ public class Player {
     }
 
     /*
-     * TODO: checks this player's hand to determine if this player is winning
+     * DONE: checks this player's hand to determine if this player is winning
      * the player with a complete chain of 14 consecutive numbers wins the game
      * note that the player whose turn is now draws one extra tile to have 15 tiles in hand,
      * and the extra tile does not disturb the longest chain and therefore the winning condition
      * check the assigment text for more details on winning condition
      */
     public boolean checkWinning() {
-        return false;
+        return findLongestChain() >= 14;
     }
 
     /*
-     * TODO: used for finding the longest chain in this player hand
+     * DONE: used for finding the longest chain in this player hand
      * this method should iterate over playerTiles to find the longest chain
      * of consecutive numbers, used for checking the winning condition
      * and also for determining the winner if tile stack has no tiles
      */
     public int findLongestChain() {
+        int currentChainLength = 0;
         int longestChain = 0;
 
+        for(int index = 0; index < playerTiles.length; index++){
+            if(playerTiles[index].getValue() == playerTiles[index - 1].getValue() + 1){
+                currentChainLength++;
+                longestChain = Math.max(longestChain, currentChainLength);
+            }
+            else{
+                currentChainLength = 1;
+            }
+        }
         return longestChain;
     }
 
     /*
-     * TODO: removes and returns the tile in given index position
+     * DONE: removes and returns the tile in given index position
      */
     public Tile getAndRemoveTile(int index) {
-        return null;
+        Tile removedTile = playerTiles[index];
+        playerTiles[index] = null;
+
+        return removedTile;
     }
 
     /*
-     * TODO: adds the given tile to this player's hand keeping the ascending order
+     * DONE: adds the given tile to this player's hand keeping the ascending order 
      * this requires you to loop over the existing tiles to find the correct position,
      * then shift the remaining tiles to the right by one
      */
     public void addTile(Tile t) {
-
+        int index = numberOfTiles;
+        while (index > 0 && playerTiles[index - 1].getValue() > t.getValue()) {
+            playerTiles[index] = playerTiles[index - 1];
+            index--;
+        }
+        playerTiles[index] = t;
+        numberOfTiles++;
     }
 
     /*
