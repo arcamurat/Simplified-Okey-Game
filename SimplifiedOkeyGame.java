@@ -1,3 +1,7 @@
+import java.util.Random;
+import java.util.Arrays;
+import java.util.ArrayList;
+
 public class SimplifiedOkeyGame {
 
     Player[] players;
@@ -27,55 +31,118 @@ public class SimplifiedOkeyGame {
     }
 
     /*
-     * TODO: distributes the starting tiles to the players
+     * DONE: distributes the starting tiles to the players
      * player at index 0 gets 15 tiles and starts first
      * other players get 14 tiles, this method assumes the tiles are already shuffled
      */
     public void distributeTilesToPlayers() {
-
+        int givenTile = 0;
+        int playerNumber = 0;
+        int tilePerPlayer;
+        for (int i = 0; i < 4; i++) 
+        {
+            if ( i = 0) 
+            {
+                tilePerPlayer = 15;
+            }
+            else 
+            {
+                tilePerPlayer = 14;
+            }
+            for (int k = 0; k < tilePerPlayer; k++) 
+            {
+                players[i].addTile(tiles[givenTile]);
+                givenTile++;
+            }
+        }
     }
 
     /*
-     * TODO: get the last discarded tile for the current player
+     * DONE: get the last discarded tile for the current player
      * (this simulates picking up the tile discarded by the previous player)
      * it should return the toString method of the tile so that we can print what we picked
      */
     public String getLastDiscardedTile() {
-        return null;
+        players[currentPlayerIndex].addTile(lastDiscardedTile);
+        return lastDiscardedTile.toString();
     }
 
     /*
-     * TODO: get the top tile from tiles array for the current player
+     * DONE: get the top tile from tiles array for the current player
      * that tile is no longer in the tiles array (this simulates picking up the top tile)
      * and it will be given to the current player
      * returns the toString method of the tile so that we can print what we picked
      */
     public String getTopTile() {
-        return null;
+        int topIndex = tileCount - 1;
+        Tile topTile = tiles[topIndex];
+        players[currentPlayerIndex].addTile(topTile);
+        tiles[topIndex] = null;
+        return topTile.toString();
     }
 
     /*
-     * TODO: should randomly shuffle the tiles array before game starts
+     * DONE: should randomly shuffle the tiles array before game starts
      */
     public void shuffleTiles() {
-
+        Random random = new Random();
+        for (int shuffleRound = tiles.length - 1; i > 0; i--) 
+        {
+            int randomSelectedTile = random.nextInt(shuffleRound + 1);
+            Tile previous = tiles[shuffleRound];
+            tiles[shuffleRound] = tiles[randomSelectedTile];
+            tiles[randomSelectedTile] = previous;
+        }
     }
 
     /*
-     * TODO: check if game still continues, should return true if current player
+     * DONE: check if game still continues, should return true if current player
      * finished the game. use checkWinning method of the player class to determine
      */
     public boolean didGameFinish() {
-        return false;
+        if (players[currentPlayerIndex].checkWinning()) 
+        {
+            return true;
+        }
+        else 
+        {
+            return false;
+        }
     }
 
-    /* TODO: finds the player who has the highest number for the longest chain
+    /* DONE: finds the player who has the highest number for the longest chain
      * if multiple players have the same length may return multiple players
      */
     public Player[] getPlayerWithHighestLongestChain() {
-        Player[] winners = new Player[1];
-
-        return winners;
+        int highestLongevity = Integer.MIN_VALUE;
+        int winnerAmount = 0;
+        ArrayList <Player> winnerPlayers;
+        
+        for (int k = 0; k < players.length; k++)
+        {
+            winnerPlayers = new ArrayList <>();
+            if (players[k].findLongestChain() > highestLongevity)
+            {
+                if (winnerAmount != 0)
+                {
+                    winnerAmount = 0;
+                    winnerPlayers.removeAll();
+                }
+                winnerPlayers.add(players[k]);
+                winnerAmount++;
+            }
+            else if (players[k].findLongestChain() == highestLongevity)
+            {
+                winnerAmount++;
+                winnerPlayers.add(players[k]);
+            }
+        }
+        Player[] winnersFinal = new Player[winnerAmount];
+        for (int i = 0; i < winnersFinal.length; i++)
+        {
+            winnersFinal[i] = winnerPlayers.get(i);
+        }
+        return winnersFinal;
     }
     
     /*
