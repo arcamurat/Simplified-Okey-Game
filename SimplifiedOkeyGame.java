@@ -160,7 +160,24 @@ public class SimplifiedOkeyGame {
      * by checking if it increases the longest chain length, if not get the top tile
      */
     public void pickTileForComputer() {
-
+        
+        int playersLongestChain = players[currentPlayerIndex].findLongestChain();
+        Boolean getDiscardedOne = true;
+        
+        players[currentPlayerIndex].addTile(lastDiscardedTile); //temporarily adding the discarded tile
+        int newLongestChain = players[currentPlayerIndex].findLongestChain();
+        
+        players[currentPlayerIndex].removeTile(); // remove the temporarily added tile // WE DONT HAVE IT
+            if(newLongestChain <= playersLongestChain){
+                getDiscardedOne = false;
+            }
+        
+        if(getDiscardedOne){
+            getLastDiscardedTile();
+        }
+        else{
+            getTopTile();
+        }
     }
 
     /*
@@ -177,9 +194,11 @@ public class SimplifiedOkeyGame {
      * that player's tiles
      */
     public void discardTile(int tileIndex) {
-
+        if(tileIndex >= 0 && tileIndex < players[currentPlayerIndex].getTiles().length) {
+            players[currentPlayerIndex].getAndRemoveTile(tileIndex); //removing the tile at the specified index from the player's tiles
+            lastDiscardedTile = players[currentPlayerIndex].getAndRemoveTile(tileIndex);
+        }
     }
-
     public void displayDiscardInformation() {
         if(lastDiscardedTile != null) {
             System.out.println("Last Discarded: " + lastDiscardedTile.toString());
