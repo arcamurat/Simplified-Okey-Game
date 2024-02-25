@@ -82,9 +82,10 @@ public class Player {
                 }
                 // koyulacak olan indexi bulalim
                 for(int i =0; i<playerTiles.length;i++){
-                    if( playerTiles[i]!=null && ( t.value > playerTiles[i].value ) )//i bos degil ve verilen deger i deki degerden buyukse
+                    if( (playerTiles[i] == null) || ( t.value < playerTiles[i].value ) )//i bos degil ve verilen deger i deki degerden buyukse
                     {
-                        koyulacakIndex = i+1; // koyulacak olan bu indexe koyulacak. bundan dolayi bu indexteki original degerden baslayarak tum degerler saga kaymali.
+                        koyulacakIndex = i; // koyulacak olan bu indexe koyulacak. bundan dolayi bu indexteki original degerden baslayarak tum degerler saga kaymali.
+                        break;
                     }
                 }
                 // ilk null olana mi yoksa koyulacak olana mi koyacagiz onu belirleyelim.
