@@ -29,20 +29,21 @@ public class Player {
     public int findLongestChain() {
         int currentChainLength = 1;
         int longestChain = 1;
-
+    
         for(int index = 1; index < playerTiles.length; index++){
-            if(playerTiles[index].getValue() == playerTiles[index - 1].getValue() + 1){// would throw a exeption when index=0 => index -1 =-1. 
+            if(playerTiles[index] != null && playerTiles[index - 1] != null && 
+               playerTiles[index].getValue() == playerTiles[index - 1].getValue() + 1) {
                 currentChainLength++;
                 longestChain = Math.max(longestChain, currentChainLength);
-            }
-            else{
-                if(!(playerTiles[index].getValue() == playerTiles[index - 1].getValue())){// if there is two duplicates side to side, the currentChain should not be resetted to 1. 
-                currentChainLength = 1;
+            } else {
+                if(playerTiles[index] != null && playerTiles[index - 1] != null &&
+                   !(playerTiles[index].getValue() == playerTiles[index - 1].getValue())) {
+                    currentChainLength = 1;
                 }
             }
         }
         return longestChain;
-    }
+    }    
 
     /*
      * DONE: removes and returns the tile in given index position
@@ -60,6 +61,10 @@ public class Player {
      * then shift the remaining tiles to the right by one
      */
     public void addTile(Tile t) {
+        if (t == null) {
+            System.out.println("Attempted to add a null Tile.");
+            return;
+        }
         
         if(playerTiles[0]==null){
             playerTiles[0] = t; // ilk koyulan icin ozel durum.
@@ -115,15 +120,18 @@ public class Player {
     }
 
     /*
-     * displays the tiles of this player
-     */
+    * displays the tiles of this player
+    */
     public void displayTiles() {
         System.out.println(playerName + "'s Tiles:");
-        for (int i = 0; i < numberOfTiles; i++) {
-            System.out.print(playerTiles[i].toString() + " ");
+        for (int i = 0; i < playerTiles.length; i++) {
+            if (playerTiles[i] != null) {
+                System.out.print(playerTiles[i].toString() + " ");
+            }
         }
         System.out.println();
     }
+
 
     public Tile[] getTiles() {
         return playerTiles;

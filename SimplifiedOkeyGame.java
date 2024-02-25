@@ -1,5 +1,4 @@
 import java.util.Random;
-import java.util.Arrays;
 import java.util.ArrayList;
 
 public class SimplifiedOkeyGame {
@@ -77,10 +76,16 @@ public class SimplifiedOkeyGame {
     public String getTopTile() {
         int topIndex = tileCount - 1;
         Tile topTile = tiles[topIndex];
-        players[currentPlayerIndex].addTile(topTile);
-        tiles[topIndex] = null;
-        return topTile.toString();
+        if (topTile != null) {
+            players[currentPlayerIndex].addTile(topTile);
+            tiles[topIndex] = null;
+            return topTile.toString();
+        } else {
+            System.out.println("Error: Attempted to get a null top tile.");
+            return "";
+        }
     }
+    
 
     /*
      * DONE: should randomly shuffle the tiles array before game starts
@@ -151,31 +156,28 @@ public class SimplifiedOkeyGame {
      * by checking if it increases the longest chain length, if not get the top tile
      */
     public void pickTileForComputer() {
-        
-        Tile[] playerTiles = players[currentPlayerIndex].getTiles();
         int playersLongestChain = players[currentPlayerIndex].findLongestChain();
         
-        Tile[] controlTiles = new Tile[playerTiles.length];
-        System.arraycopy(playerTiles, 0, controlTiles, 0, playerTiles.length);
-        Player[] controlPlayer = new Player[1];  //ŞURALARI BİRLEŞTİREMEDİM
+        Boolean getDiscardedOne = false;
         
-        Boolean getDiscardedOne = true;
-        
-        controlPlayer[0].addTile(lastDiscardedTile); //to control
-       
-        int newControlChain = controlPlayer[0].findLongestChain();
-        
-            if(newControlChain <= playersLongestChain){
-                getDiscardedOne = false;
-            }
-        
-        if(getDiscardedOne){
-            getLastDiscardedTile();
+
+        lastDiscardedTile = new Tile(0); 
+        players[currentPlayerIndex].addTile(lastDiscardedTile); 
+        int newChainLength = players[currentPlayerIndex].findLongestChain(); 
+        if (newChainLength > playersLongestChain) {
+            getDiscardedOne = true;
         }
-        else{
+
+        players[currentPlayerIndex].getAndRemoveTile(players[currentPlayerIndex].numberOfTiles - 1);
+        
+
+        if (getDiscardedOne) {
+            getLastDiscardedTile();
+        } else {
             getTopTile();
         }
     }
+    
 
     /*
      * TODO: Current computer player will discard the least useful tile.
