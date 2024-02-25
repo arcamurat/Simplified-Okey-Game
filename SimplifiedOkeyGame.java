@@ -157,24 +157,27 @@ public class SimplifiedOkeyGame {
      * by checking if it increases the longest chain length, if not get the top tile
      */
     public void pickTileForComputer() {
-        int playersLongestChain = players[currentPlayerIndex].findLongestChain();
-        
+        Tile[]testTile = new Tile[15];
         Boolean getDiscardedOne = false;
-        
 
-        lastDiscardedTile = new Tile(0); 
-        players[currentPlayerIndex].addTile(lastDiscardedTile); 
-        int newChainLength = players[currentPlayerIndex].findLongestChain(); 
-        if (newChainLength > playersLongestChain) {
+        for(int i = 0; i<testTile.length-1;i++){
+            testTile[i] = players[currentPlayerIndex].playerTiles[i];
+        }
+        players[currentPlayerIndex].playerTiles = testTile;
+        players[currentPlayerIndex].addTile(lastDiscardedTile);
+        int lastDiscardedLongestChain = players[currentPlayerIndex].findLongestChain();
+
+        players[currentPlayerIndex].playerTiles = testTile;
+        int preLongestChain = players[currentPlayerIndex].findLongestChain();
+
+        if(lastDiscardedLongestChain>preLongestChain){
             getDiscardedOne = true;
         }
-
-        players[currentPlayerIndex].getAndRemoveTile(players[currentPlayerIndex].numberOfTiles - 1);
         
-
-        if (getDiscardedOne) {
-            getLastDiscardedTile();
-        } else {
+        if(getDiscardedOne){
+            players[currentPlayerIndex].addTile(lastDiscardedTile);
+        }
+        else{
             getTopTile();
         }
     }
@@ -187,9 +190,9 @@ public class SimplifiedOkeyGame {
     public void discardTileForComputer() {
         
         
-        for(int d = 0; d<14; d++){ //ilk aynı olanlardan kurtulalım
-            if( players[currentPlayerIndex].playerTiles[d] != null && players[currentPlayerIndex].playerTiles[d].getValue() == players[currentPlayerIndex].playerTiles[d+1].getValue()){ //sıralı dizildiği için kendinden sonra gelenle aynıysa diğerini silcez
-                for(int i = d; i < players[currentPlayerIndex].playerTiles.length; i++){
+        for(int d = 0; d<13; d++){ //ilk aynı olanlardan kurtulalım
+            if( players[currentPlayerIndex].playerTiles[d+1] != null && players[currentPlayerIndex].playerTiles[d].getValue() == players[currentPlayerIndex].playerTiles[d+1].getValue()){ //sıralı dizildiği için kendinden sonra gelenle aynıysa diğerini silcez
+                for(int i = d; i < players[currentPlayerIndex].playerTiles.length-1; i++){
                     players[currentPlayerIndex].playerTiles[i] = players[currentPlayerIndex].playerTiles[i + 1];
                 }
             }
@@ -198,8 +201,8 @@ public class SimplifiedOkeyGame {
         int differenceWithLongest = 0;
         int difference = 0 ;
         int shouldRemovePlace = 0;
-        for(int a = 0; a<14; a++){
-            difference = players[currentPlayerIndex].playerTiles[a+1].getValue() - players[currentPlayerIndex].playerTiles[a].getValue();
+        for(int a = 0; a<13; a++){
+            difference = Math.abs(players[currentPlayerIndex].playerTiles[a+1].getValue() - players[currentPlayerIndex].playerTiles[a].getValue());
             if(differenceWithLongest < difference){
                 differenceWithLongest = difference;
                 shouldRemovePlace = a;
