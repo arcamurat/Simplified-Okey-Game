@@ -27,16 +27,18 @@ public class Player {
      * and also for determining the winner if tile stack has no tiles
      */
     public int findLongestChain() {
-        int currentChainLength = 0;
-        int longestChain = 0;
+        int currentChainLength = 1;
+        int longestChain = 1;
 
-        for(int index = 0; index < playerTiles.length; index++){
-            if(playerTiles[index].getValue() == playerTiles[index - 1].getValue() + 1){
+        for(int index = 1; index < playerTiles.length; index++){
+            if(playerTiles[index].getValue() == playerTiles[index - 1].getValue() + 1){// would throw a exeption when index=0 => index -1 =-1. 
                 currentChainLength++;
                 longestChain = Math.max(longestChain, currentChainLength);
             }
             else{
+                if(!(playerTiles[index].getValue() == playerTiles[index - 1].getValue())){// if there is two duplicates side to side, the currentChain should not be resetted to 1. 
                 currentChainLength = 1;
+                }
             }
         }
         return longestChain;
@@ -58,15 +60,47 @@ public class Player {
      * then shift the remaining tiles to the right by one
      */
     public void addTile(Tile t) {
-        int index = numberOfTiles;
-        while (index > 0 && playerTiles[index - 1].getValue() > t.getValue()) {
-            playerTiles[index] = playerTiles[index - 1];
-            index--;
+        
+        if(playerTiles[0]==null){
+            playerTiles[0] = t; // ilk koyulan icin ozel durum.
         }
-        playerTiles[index] = t;
-        numberOfTiles++;
-    }
+        else{
+            // kouyulacak indexi belirlemen lazim.
+                int koyulacakIndex=-1;
+                int ilkNullIndexi = 0;
+                //ilk null indexini bulalim ilk once
+                for(int i =0; i<playerTiles.length;i++){
+                    if( playerTiles[i]!=null && playerTiles[i+1]==null ){
+                        ilkNullIndexi = i+1;
+                        i = playerTiles.length;
+                    }
+                }
+                // koyulacak olan indexi bulalim
+                for(int i =0; i<playerTiles.length;i++){
+                    if( playerTiles[i]!=null && ( t.value > playerTiles[i].value ) )//i bos degil ve verilen deger i deki degerden buyukse
+                    {
+                        koyulacakIndex = i+1; // koyulacak olan bu indexe koyulacak. bundan dolayi bu indexteki original degerden baslayarak tum degerler saga kaymali.
+                    }
+                }
+                // ilk null olana mi yoksa koyulacak olana mi koyacagiz onu belirleyelim.
+                if( koyulacakIndex==-1 ){
+                    koyulacakIndex = ilkNullIndexi;
+                }
+                // eger direkt bos indexe koyacaksak koyalim
+                if ( koyulacakIndex == ilkNullIndexi) {
+                    playerTiles[ilkNullIndexi]=t;
+                }
+                else{ // arada bir yere koyacaksak
+                
+                        for(int i = ilkNullIndexi; i<koyulacakIndex;i--){
+                            playerTiles[i] = playerTiles[i-1]; // koyulacak olan index bosaltilti
+                        }
+                        playerTiles[koyulacakIndex] = t; // bosaltilan indexe istenilen tile yerlestirildi.
+                }
+            }
 
+        }
+    
     /*
      * finds the index for a given tile in this player's hand
      */
