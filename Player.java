@@ -66,46 +66,29 @@ public class Player {
             return;
         }
         
-        if(playerTiles[0]==null){
-            playerTiles[0] = t; // ilk koyulan icin ozel durum.
+        if (playerTiles[0] == null) {
+            playerTiles[0] = t; // for the first tile
         }
-        else{
-            // kouyulacak indexi belirlemen lazim.
-                int koyulacakIndex=-1;
-                int ilkNullIndexi = 0;
-                //ilk null indexini bulalim ilk once
-                for(int i =0; i<playerTiles.length;i++){
-                    if( playerTiles[i]!=null && playerTiles[i+1]==null ){
-                        ilkNullIndexi = i+1;
-                        i = playerTiles.length;
-                    }
-                }
-                // koyulacak olan indexi bulalim
-                for(int i =0; i<playerTiles.length;i++){
-                    if( (playerTiles[i] == null) || ( t.value < playerTiles[i].value ) )//i bos degil ve verilen deger i deki degerden buyukse
-                    {
-                        koyulacakIndex = i; // koyulacak olan bu indexe koyulacak. bundan dolayi bu indexteki original degerden baslayarak tum degerler saga kaymali.
-                        break;
-                    }
-                }
-                // ilk null olana mi yoksa koyulacak olana mi koyacagiz onu belirleyelim.
-                if( koyulacakIndex==-1 ){
-                    koyulacakIndex = ilkNullIndexi;
-                }
-                // eger direkt bos indexe koyacaksak koyalim
-                if ( koyulacakIndex == ilkNullIndexi) {
-                    playerTiles[ilkNullIndexi]=t;
-                }
-                else{ // arada bir yere koyacaksak
-                
-                        for(int i = ilkNullIndexi; i<koyulacakIndex;i--){
-                            playerTiles[i] = playerTiles[i-1]; // koyulacak olan index bosaltilti
-                        }
-                        playerTiles[koyulacakIndex] = t; // bosaltilan indexe istenilen tile yerlestirildi.
-                }
+        else {
+            int insertionIndex = 0;
+            while (insertionIndex < playerTiles.length && playerTiles[insertionIndex] != null && t.getValue() > playerTiles[insertionIndex].getValue()) {
+                insertionIndex++;
             }
-
+    
+            if (insertionIndex == playerTiles.length) {
+                System.out.println("Player's hand is full. Cannot add tile.");
+                return;
+            }
+    
+            // shifting
+            for (int i = playerTiles.length - 2; i > insertionIndex; i--) {
+                playerTiles[i] = playerTiles[i - 1];
+            }
+    
+            playerTiles[insertionIndex] = t; 
         }
+    }
+    
     
     /*
      * finds the index for a given tile in this player's hand
@@ -144,5 +127,9 @@ public class Player {
 
     public String getName() {
         return playerName;
+    }
+
+    public void setTiles(Tile[] updatedTiles) {
+        playerTiles = updatedTiles;
     }
 }
