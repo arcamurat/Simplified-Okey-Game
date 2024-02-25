@@ -80,8 +80,14 @@ public class ApplicationMain {
 
                     // TODO: make sure the given index is correct, should be 0 <= index <= 14
 
-                    game.discardTile(playerChoice);
-                    game.passTurnToNextPlayer();
+                    if(0 <= playerChoice && playerChoice <= 14){
+                        game.discardTile(playerChoice);
+                        game.passTurnToNextPlayer();
+                    }
+                    else{
+                        System.out.println("Given index is not correct!");
+                    }
+
                 }
                 else{
                     if(!game.didGameFinish()) {
@@ -92,6 +98,14 @@ public class ApplicationMain {
                         // TODO: the game ended with no more tiles in the stack
                         // determine the winner based on longest chain lengths of the players
                         // use getPlayerWithHighestLongestChain method of game for this task
+                        Player[] winnerList = game.getPlayerWithHighestLongestChain();
+                        System.out.println();
+                        for(int i = 0; i <winnerList.length; i++){
+                            System.out.println(winnerList[i].getName());
+                            if(i < winnerList.length - 1){
+                                System.out.print(", ");
+                            }
+                        }
                     }
                 }
             }
@@ -120,6 +134,14 @@ public class ApplicationMain {
                         // TODO: the game ended with no more tiles in the stack
                         // determine the winner based on longest chain lengths of the players
                         // use getPlayerWithHighestLongestChain method of game for this task
+                        Player[] winnerList = game.getPlayerWithHighestLongestChain();
+                        System.out.println();
+                        for(int i = 0; i <winnerList.length; i++){
+                            System.out.println(winnerList[i].getName());
+                            if(i < winnerList.length - 1){
+                                System.out.print(", ");
+                            }
+                        }
                     }
                 }
             }
