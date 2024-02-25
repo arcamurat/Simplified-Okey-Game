@@ -37,11 +37,10 @@ public class SimplifiedOkeyGame {
      */
     public void distributeTilesToPlayers() {
         int givenTile = 0;
-        int playerNumber = 0;
         int tilePerPlayer;
         for (int i = 0; i < 4; i++) 
         {
-            if ( i = 0) 
+            if ( i == 0) 
             {
                 tilePerPlayer = 15;
             }
@@ -54,7 +53,9 @@ public class SimplifiedOkeyGame {
                 players[i].addTile(tiles[givenTile]);
                 givenTile++;
             }
+            players[i].numberOfTiles = tilePerPlayer; //playerin Numberoftiles instance variable'i guncellendi.
         }
+        tileCount -=givenTile; // tileCount guncellenmeliydi.
     }
 
     /*
@@ -86,12 +87,13 @@ public class SimplifiedOkeyGame {
      */
     public void shuffleTiles() {
         Random random = new Random();
-        for (int shuffleRound = tiles.length - 1; i > 0; i--) 
+
+        for (int i=0; i <tiles.length ; i++) 
         {
-            int randomSelectedTile = random.nextInt(shuffleRound + 1);
-            Tile previous = tiles[shuffleRound];
-            tiles[shuffleRound] = tiles[randomSelectedTile];
-            tiles[randomSelectedTile] = previous;
+            int randomSelectedTile_index = random.nextInt(tiles.length);
+            Tile previous = tiles[i] ;
+            tiles[i]= tiles[randomSelectedTile_index];
+            tiles[randomSelectedTile_index]=previous;
         }
     }
 
@@ -114,37 +116,26 @@ public class SimplifiedOkeyGame {
      * if multiple players have the same length may return multiple players
      */
     public Player[] getPlayerWithHighestLongestChain() {
-        int highestLongevity = Integer.MIN_VALUE;
-        int winnerAmount = 0;
-        ArrayList <Player> winnerPlayers;
-        
-        for (int k = 0; k < players.length; k++)
-        {
-            winnerPlayers = new ArrayList <>();
-            if (players[k].findLongestChain() > highestLongevity)
-            {
-                if (winnerAmount != 0)
-                {
-                    winnerAmount = 0;
-                    winnerPlayers.removeAll();
-                }
-                winnerPlayers.add(players[k]);
-                winnerAmount++;
-            }
-            else if (players[k].findLongestChain() == highestLongevity)
-            {
-                winnerAmount++;
-                winnerPlayers.add(players[k]);
+        int longestChain = players[0].findLongestChain();
+        for(int i=1; i < players.length;i++){
+            if( players[i].findLongestChain() > longestChain ){
+                longestChain = players[i].findLongestChain();
             }
         }
-        Player[] winnersFinal = new Player[winnerAmount];
+        ArrayList<Player> winnerList = new ArrayList<Player>();
+        for(int i =0; i<players.length;i++){
+            if(players[i].findLongestChain() == longestChain){
+                winnerList.add(players[i]);
+            }
+        }
+        Player[] winnersFinal = new Player[winnerList.size()];
         for (int i = 0; i < winnersFinal.length; i++)
         {
-            winnersFinal[i] = winnerPlayers.get(i);
+            winnersFinal[i] = winnerList.get(i);
         }
         return winnersFinal;
     }
-    
+        
     /*
      * checks if there are more tiles on the stack to continue the game
      */
