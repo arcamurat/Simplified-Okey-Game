@@ -185,12 +185,12 @@ public class SimplifiedOkeyGame {
      * you may choose based on how useful each tile is
      */
     public void discardTileForComputer() {
-        Tile[] playerTiles = players[currentPlayerIndex].getTiles();
+        
         
         for(int d = 0; d<14; d++){ //ilk aynı olanlardan kurtulalım
-            if(playerTiles[d].getValue() == playerTiles[d+1].getValue()){ //sıralı dizildiği için kendinden sonra gelenle aynıysa diğerini silcez
-                for(int i = d; i < playerTiles.length - 1; i++){
-                    playerTiles[i] = playerTiles[i + 1];
+            if( players[currentPlayerIndex].playerTiles[d] != null && players[currentPlayerIndex].playerTiles[d].getValue() == players[currentPlayerIndex].playerTiles[d+1].getValue()){ //sıralı dizildiği için kendinden sonra gelenle aynıysa diğerini silcez
+                for(int i = d; i < players[currentPlayerIndex].playerTiles.length; i++){
+                    players[currentPlayerIndex].playerTiles[i] = players[currentPlayerIndex].playerTiles[i + 1];
                 }
             }
         }
@@ -199,17 +199,16 @@ public class SimplifiedOkeyGame {
         int difference = 0 ;
         int shouldRemovePlace = 0;
         for(int a = 0; a<14; a++){
-            difference = playerTiles[a+1].getValue() - playerTiles[a].getValue();
+            difference = players[currentPlayerIndex].playerTiles[a+1].getValue() - players[currentPlayerIndex].playerTiles[a].getValue();
             if(differenceWithLongest < difference){
                 differenceWithLongest = difference;
                 shouldRemovePlace = a;
             }
         }
-        for(int i = shouldRemovePlace; i < playerTiles.length - 1; i++){
-            playerTiles[i] = playerTiles[i + 1];
+        for(int i = shouldRemovePlace; i < players[currentPlayerIndex].playerTiles.length - 1; i++){
+            players[currentPlayerIndex].playerTiles[i] = players[currentPlayerIndex].playerTiles[i + 1];
         }
 
-        playerTiles = Arrays.copyOf(playerTiles, playerTiles.length - 1);
     }
 
     /*
